@@ -7,3 +7,11 @@ https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/getIma
 
 改变图片大小
 https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/drawImage
+
+输出8色png
+https://www.thinbug.com/q/26625876
+https://www.imagemagick.org/discourse-server/viewtopic.php?t=19590
+https://www.imagemagick.org/discourse-server/viewtopic.php?t=31703
+
+
+https://vanschneider.com/colors
