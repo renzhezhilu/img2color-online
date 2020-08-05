@@ -10,8 +10,13 @@ https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/drawIm
 
 输出8色png
 https://www.thinbug.com/q/26625876
+
 https://www.imagemagick.org/discourse-server/viewtopic.php?t=19590
+
 https://www.imagemagick.org/discourse-server/viewtopic.php?t=31703
+
+### 关键
+https://www.imagemagick.org/discourse-server/viewtopic.php?f=3&t=12818
 
 
 https://vanschneider.com/colors
