@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang=en>
+
+<head>
+    <meta charset=utf-8>
+    <meta http-equiv=X-UA-Compatible content="IE=edge">
+    <meta name=viewport content="width=device-width,initial-scale=1">
+    <link rel=icon href=favicon.png>
+    <title>在线提取图片配色</title>
+</head>
+
+<body><noscript><strong>We're sorry but 在线提取图片配色 doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript>
+    <div id=app>
+        <div id=page_loading>
+            <div>
+                <div><span id=page_loading_num style="font-size:80px;line-height: 80px;">0</span> %</div>
+                <p>loading...</p>
+            </div>
+        </div>
+        <style>
+            #page_loading {
+                position: fixed;
+                z-index: 10000;
+                width: 100%;
+                height: 100%;
+                background-color: #fff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 26px;
+                line-height: 26px;
+                font-weight: 100;
+                font-family: Avenir, "微软雅黑", Helvetica, Arial, sans-serif;
+            }
+
+            #page_loading,
+            #page_loading * {
+                list-style: none;
+                box-sizing: border-box;
+                padding: 0;
+                margin: 0;
+            }
+        </style>
+        <script src=https://cdn.jsdelivr.net/gh/renzhezhilu/webp2jpg-online/cdn/localforage.min.js> </script> <script>
+            var Module = {}
+        </script>
+        <script>
+            var version = 'v0.0.1'
+            if (localStorage.getItem('version') !== version) {
+                localforage.clear()
+                console.log('版本更新');
+                setTimeout(() => {
+                    GO()
+                }, 600);
+            } else {
+                GO()
+
+            }
+
+            function creatScript(src, name) {
+                let body = document.querySelector('body')
+                let script = document.createElement('script')
+                script.src = src
+                script.className = name
+                body.appendChild(script)
+            }
+            async function fileSaveLocal(fileUrl, name) {
+                try {
+                    const isHave = await localforage.getItem(name);
+                    if (isHave) {
+                        console.log('本地已存在');
+                        let val = await localforage.getItem(name)
+                        console.log(val);
+                        return {
+                            url: URL.createObjectURL(val),
+                            local: true,
+                            name: name
+                        }
+                    } else {
+                        console.log('本地不存在，重新请求');
+                        let blob = await fetch(fileUrl)
+                            .then(d => d.blob())
+
+                        await localforage.setItem(name, blob)
+                        let val = await localforage.getItem(name)
+                        console.log(val);
+                        return {
+                            url: URL.createObjectURL(val),
+                            local: false,
+                            name: name
+                        }
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+
+
+
+            async function GO() {
+                let loading = document.getElementById('page_loading')
+                let num = document.getElementById('page_loading_num')
+                let wasmjs_dom = document.getElementById('wasmjs')
+
+                let get = [{
+                        url: 'https://cdn.jsdelivr.net/gh/renzhezhilu/img2color-online/cdn/wasm-im.wasm',
+                        name: 'wasm-im.wasm'
+                    },
+                    {
+                        url: 'https://cdn.jsdelivr.net/gh/renzhezhilu/img2color-online/cdn/v0.0.1/app.js',
+                        name: 'wasm-im.js'
+                    },
+                    // {
+                    //     url: 'https://cdn.jsdelivr.net/gh/renzhezhilu/webp2jpg-online/cdn/dist_js/chunk.js',
+                    //     name: 'chunk.js'
+                    // },
+                    // {
+                    //     url: 'https://cdn.jsdelivr.net/gh/renzhezhilu/webp2jpg-online/cdn/dist_js/app.js',
+                    //     name: 'app.js'
+                    // },
+                ]
+                let ok = []
+                get.map((m, index) => {
+                    fileSaveLocal(m.url, m.name)
+                        .then(d => {
+                            ok.push(d)
+                            get = get.map(m => {
+                                ok.map(a => {
+                                    if (a.name === m.name) m.url = a.url
+                                })
+                                return m
+                            })
+                            num.textContent = ((index / get.length * 100).toFixed(0) - 0)
+                            if (ok.length === get.length) {
+                                if (ok.every(e => e.local)) {
+                                    console.log('完成。。。。', ok);
+                                    Module.locateFile = _ => get.filter(m => m.name === 'wasm-im.wasm')[0].url
+
+                                    let s1 = get.filter(m => m.name === 'wasm-im.js')[0]
+                                    creatScript(s1.url, s1.name)
+                                    // let s2 = get.filter(m => m.name === 'chunk.js')[0]
+                                    // creatScript(s2.url, s2.name)
+                                    // let s3 = get.filter(m => m.name === 'app.js')[0]
+                                    // creatScript(s3.url, s3.name)
+
+                                    loading.style.display = 'none'
+                                } else {
+                                    localStorage.setItem('version', version)
+                                    location.reload()
+                                }
+                            }
+                        })
+                })
+            }
+        </script>
+    </div>
+</body> </html>
