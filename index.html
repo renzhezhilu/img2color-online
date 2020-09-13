@@ -104,7 +104,7 @@
 
                 let get = [{
                         url: 'https://cdn.jsdelivr.net/gh/renzhezhilu/img2color-online/cdn/wasm-im.wasm',
-                        name: 'wasm-im.wasm'
+                        name: 'wasm-imcolor.wasm'
                     },
                     {
                         url: 'https://cdn.jsdelivr.net/gh/renzhezhilu/img2color-online/cdn/v0.0.1/app3.js',
@@ -134,9 +134,9 @@
                             if (ok.length === get.length) {
                                 if (ok.every(e => e.local)) {
                                     console.log('完成。。。。', ok);
-                                    Module.locateFile = _ => get.filter(m => m.name === 'wasm-im.wasm')[0].url
+                                    Module.locateFile = _ => get.filter(m => m.name === 'wasm-imcolor.wasm')[0].url
 
-                                    let s1 = get.filter(m => m.name === 'wasm-im.js')[0]
+                                    let s1 = get.filter(m => m.name === 'app3color.js')[0]
                                     creatScript(s1.url, s1.name)
                                     // let s2 = get.filter(m => m.name === 'chunk.js')[0]
                                     // creatScript(s2.url, s2.name)
